@@ -64,7 +64,7 @@ $no = 1;
                         <div class="table table-responsive">
                             <div class="mt-2 mb-3">
                                 <a href="tambah-transaction.php" class="btn btn-primary"
-                                    style="border-radius: 20px">Transaksi Kasir</a>
+                                    style="border-radius: 20px">Tambah Transaksi</a>
                             </div>
                             <table class=" table table-bordered">
                                 <thead>

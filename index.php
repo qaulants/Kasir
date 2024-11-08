@@ -12,6 +12,7 @@ if(isset($_POST['login'])) {
         $row = mysqli_fetch_assoc($selectLogin);
 
         if ($row['email'] == $email && $row['password'] == $pass) {
+            $_SESSION['ID'] = $row['id'];
             $_SESSION['EMAILNYABRO'] = $row['email'];
             $_SESSION['NAMALENGKAPNYA'] = $row['nama_lengkap'];
             header("location: kasir.php");
@@ -41,7 +42,7 @@ if(isset($_POST['login'])) {
                         <div class="card-title text-center">
                             <h2 class="fw-bold text-primary" style="letter-spacing: -2px;">
                                 <img src="./twitter.png" alt=""
-                                    style="width: 35px; margin-right: 10px; margin-bottom: 10px">Alfamart
+                                    style="width: 35px; margin-right: 10px; margin-bottom: 10px">QTMart
                             </h2>
                             <p>Silahkan masuk dengan akun anda</p>
                         </div>
