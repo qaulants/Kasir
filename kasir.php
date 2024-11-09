@@ -1,17 +1,21 @@
-<?php 
+<?php
 session_start();
 session_regenerate_id(true);
 require_once "config/koneksi.php";
 
+$queryUser = "SELECT * FROM user";
+$resultUser = $koneksi->query($queryUser);
+$rowUser = $resultUser->fetch_assoc();
 
-$queryDetail = "SELECT * FROM penjualan";
-$result = $koneksi->query($queryDetail);
-$no = 1;
+$queryDetail = mysqli_query($koneksi, "SELECT * FROM penjualan");
+
 //Jika session nya isi, maka melempar ke dashboard.php
 // if(empty($_SESSION['nama']) && empty($_SESSION['email'])){
 //     header("Location: kasir.php");
 //     exit;
 // }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +24,9 @@ $no = 1;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Document</title>
 </head>
 
@@ -39,23 +46,17 @@ $no = 1;
                     <a href="managebooks.php" class="nav-link text-white">Manage Books</a>
                 </div>
             </div>
-            <a href="#"><?php  ?></a>
-            <a style="border: 2px;" class="btn btn-outline-primary rounded-button"
+            <a class="nav-link text-white" href="#"><?php echo $rowUser['nama_lengkap'] ?></a>
+            <a style="border: 5px;" class="btn btn-outline-primary"
                 onclick="return confirm('Apakah Anda Yakin untuk Log-Out?')" href="controller/logout.php">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <!-- Garis vertikal untuk simbol power -->
-                    <line x1="12" y1="2" x2="12" y2="12"></line>
-                    <!-- Lingkaran di sekitar garis -->
-                    <path d="M16.24 7.76a6 6 0 1 1-8.48 0"></path>
-                </svg>
+                <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
             </a>
         </div>
     </nav>
-    <div class="container justify-content-center position-absolute" style="margin-top: 200px; margin-left: 250px">
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
+    <div class="container justify-content-center align-items-center" style="margin-top: 70px; margin-bottom: 70px;min-height: 100vh;">
+        <div class="row justify-content-center align-items-center">
+            <!-- <div class="col-2"></div> -->
+            <div class="col-10">
                 <div class="card shadow-lg">
                     <div class="card-header text-center">
                         <h1 style="letter-spacing: -3px" class="fw-bold text-primary">Manage Kasir</h1>
@@ -66,7 +67,7 @@ $no = 1;
                                 <a href="tambah-transaction.php" class="btn btn-primary"
                                     style="border-radius: 20px">Tambah Transaksi</a>
                             </div>
-                            <table class=" table table-bordered">
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -74,37 +75,38 @@ $no = 1;
                                         <th>Tanggal Transaksi</th>
                                         <th>Struk Pembayaran</th>
                                         <th>Status Pembayaran</th>
+                                        <!-- <th>Status Pembayaran</th> -->
                                         <th>Settings</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if ($result->num_rows > 0): ?>
-                                            <?php while($row = $result->fetch_assoc()): ?>
-                                                <tr class="text-center">
-                                                    <td><?php echo $no++; ?></td>
-                                                    <td><?php echo htmlspecialchars($row['kode_transaksi']); ?></td>
-                                                    <td><?php echo htmlspecialchars($row['tanggal_transaksi']); ?></td>
-                                                    <td>Sudah</td>
-                                                    <td>Sudah dibayar ya</td>
-                                                    <td>
-                                                        <!-- Tambahkan tombol atau link untuk mengedit atau menghapus transaksi -->
-                                                        <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                                                        <a href="hapus.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Hapus</a>
-                                                    </td>
-                                                </tr>
-                                            <?php endwhile; ?>
-                                            <?php else: ?>
-                                            <tr>
-                                                <td colspan="6" class="text-center">Tidak ada data</td>
-                                            </tr>
-                                        <?php endif; ?>
+                                    <?php $no = 1;
+                                    while ($rowDetail = mysqli_fetch_assoc($queryDetail)): ?>
+                                        <tr class="text-center">
+                                            <td><?php echo $no++; ?></td>
+                                            <td><?php echo $rowDetail['kode_transaksi'] ?></td>
+                                            <td><?php echo $rowDetail['tanggal_transaksi'] ?></td>
+                                            <td>Sudah</td>
+                                            <td>Sudah dibayar ya</td>
+
+                                            <td>
+                                                <!-- Tambahkan tombol atau link untuk mengedit atau menghapus transaksi -->
+                                                <a href="edit.php?id=<?php echo $rowDetail['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="hapus.php?id=<?php echo $rowDetail['id']; ?>" class="btn btn-danger btn-sm">Hapus</a>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile ?>
+                                    <!-- <tr>
+                                            <td colspan="6" class="text-center">Tidak ada data</td>
+                                        </tr> -->
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-2"></div>
+            <!-- <div class="col-2"></div> -->
 
         </div>
     </div>

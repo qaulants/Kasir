@@ -4,7 +4,8 @@ session_regenerate_id(true);
 date_default_timezone_set("Asia/Jakarta");
 require_once "config/koneksi.php";
 
-
+$queryUser = mysqli_query($koneksi,"SELECT * FROM user");
+$rowUser = mysqli_fetch_assoc($queryUser);
 
 // Waktu :
 $currentTime = date('Y-m-d');
@@ -34,11 +35,14 @@ if (empty($_SESSION['click_count'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Document</title>
 </head>
 
 <body style="background-image: url(image/qwerty.png); background-size:cover">
-    <nav class="navbar navbar-expand-lg  sticky-top bg-transparent" style="backdrop-filter: blur(10px); z-index: 1000;">
+    <nav class="navbar navbar-expand-lg sticky-top bg-transparent" style="backdrop-filter: blur(10px); z-index: 1000;">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navAltMarkup"
                 aria-controls="navAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,23 +57,18 @@ if (empty($_SESSION['click_count'])) {
                     <a href="managebooks.php" class="nav-link text-white">Manage Books</a>
                 </div>
             </div>
-            <a style="border: 2px;" class="btn btn-outline-primary rounded-button"
+            <a class="nav-link text-white" href="#"><?php echo $rowUser['nama_lengkap'] ?></a>
+            <a style="border: 5px;" class="btn btn-outline-primary"
                 onclick="return confirm('Apakah Anda Yakin untuk Log-Out?')" href="controller/logout.php">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <!-- Garis vertikal untuk simbol power -->
-                    <line x1="12" y1="2" x2="12" y2="12"></line>
-                    <!-- Lingkaran di sekitar garis -->
-                    <path d="M16.24 7.76a6 6 0 1 1-8.48 0"></path>
-                </svg>
+                <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
             </a>
         </div>
     </nav>
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="container d-flex justify-content-center align-items-center" style="margin-top: 30px; margin-bottom: 30px; min-height: 100vh;">
         <div class="card p-4 shadow-lg" style="width: 70%; max-width: 800px;">
             <div class="card-header bg-primary opacity-50 text-center">
                 <h1 class="fw-bold text-light">Add Transaction</h1>
-            </div>  
+            </div>
             <div class="card-body bg-transparent" style="backdrop-filter: blur(10px);">
                 <form action="controller/transaksi-store.php" method="post">
                     <div class="mb-3">
@@ -129,7 +128,7 @@ if (empty($_SESSION['click_count'])) {
                         <input type="submit" class="btn btn-primary" name="simpan" value="Hitung">
                         <a class="btn btn-danger" href="kasir.php">Kembali</a>
                     </div>
-                </form>          
+                </form>
             </div>
         </div>
     </div>
@@ -145,7 +144,7 @@ if (empty($_SESSION['click_count'])) {
             const countDisplay = document.getElementById('countDisplay');
             const tbody = document.getElementById('tbody');
             const table = document.getElementById('table');
-            
+
             let no = 0;
             button.addEventListener('click', function() {
                 no++;
@@ -175,7 +174,7 @@ if (empty($_SESSION['click_count'])) {
                 attachCategoryChangeListener();
                 attachItemChangeListener();
                 attachJumlahChangeListener();
-               
+
             });
 
             // fungsi untuk menampilkan barang berdasarkan kategori /// 
@@ -215,11 +214,11 @@ if (empty($_SESSION['click_count'])) {
 
                         if (itemId) {
                             fetch('controller/get-barang-details.php?id_barang=' + itemId)
-                            .then(response => response.json())
-                            .then(data => {
-                                sisaProdukInput.value = data.qty;
-                                hargaInput.value = data.harga;
-                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    sisaProdukInput.value = data.qty;
+                                    hargaInput.value = data.harga;
+                                })
                         } else {
                             sisaProdukInput.value = '';
                             hargaInput.value = '';
@@ -229,11 +228,11 @@ if (empty($_SESSION['click_count'])) {
             }
 
             const totalHargaKeseluruhan = document.getElementById('total_harga_keseluruhan');
-           
+
             const nominalBayarKeseluruhanInput = document.getElementById('nominal_bayar_keseluruhan');
             const kembaliKeseluruhanInput = document.getElementById('kembalian_keseluruhan');
             // fungsi untuk mebuat alert jumlah > sisaProduk
-            function attachJumlahChangeListener(){
+            function attachJumlahChangeListener() {
                 const jumlahInputs = document.querySelectorAll('.jumlah-input');
                 jumlahInputs.forEach(input => {
                     input.addEventListener('input', function() {
@@ -267,7 +266,7 @@ if (empty($_SESSION['click_count'])) {
                     const hargaInput = row.querySelector('input[name="harga[]"]');
                     const harga = parseFloat(hargaInput.value) || 0;
                     const jumlah = parseInt(input.value) || 0;
-                    
+
 
                     const subTotal = row.querySelector('.sub-total');
                     total = jumlah * harga;
@@ -282,14 +281,14 @@ if (empty($_SESSION['click_count'])) {
                 totalHargaKeseluruhan.value = totalKeseluruhan;
             }
             // mencari kembalian
-            nominalBayarKeseluruhanInput.addEventListener('input', function(){
+            nominalBayarKeseluruhanInput.addEventListener('input', function() {
                 const nominalBayar = parseFloat(this.value) || 0;
                 const totalHarga = parseFloat(totalHargaKeseluruhan.value) || 0;
-                
+
                 if (nominalBayar >= totalHarga) {
                     let kembalian = nominalBayar - totalHarga;
                     kembaliKeseluruhanInput.value = kembalian;
-                } else if (nominalBayar == 0){
+                } else if (nominalBayar == 0) {
                     kembaliKeseluruhanInput.value = 0;
                 }
             });

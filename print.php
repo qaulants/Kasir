@@ -113,12 +113,12 @@ while($rowPrint = mysqli_fetch_assoc($queryPrint)) {
                 </thead>
                 <tbody>
                     <?php foreach ($row as $key => $rowPrint): ?>
-                    <tr>
-                        <td><?php echo $rowPrint['nama_barang'] ?></td>
-                        <td><?php echo "Rp. " . number_format($rowPrint['harga']) ?></td>
-                        <td><?php echo $rowPrint['jumlah'] ?></td>
-                        <td><?php echo "Rp. " . number_format($rowPrint['sub_total']) ?></td>
-                    </tr>
+                        <tr>
+                            <td><?php echo $rowPrint['nama_barang'] ?></td>
+                            <td><?php echo "Rp. " . number_format($rowPrint['harga']) ?></td>
+                            <td><?php echo $rowPrint['jumlah'] ?></td>
+                            <td><?php echo "Rp. " . number_format($rowPrint['sub_total']) ?></td>
+                        </tr>
                     <?php endforeach ?>
                 </tbody>
             </table>
